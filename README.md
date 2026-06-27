@@ -65,7 +65,7 @@ ollama pull gemma4:latest    # LLM de generación
 **3. Clona el repo e instala dependencias:**
 
 ```bash
-git clone https://github.com/TU_USUARIO/asistente-rag-local.git
+git clone https://github.com/EnyiXZ/asistente-rag-local.git
 cd asistente-rag-local
 pip install chromadb ollama numpy
 ```
