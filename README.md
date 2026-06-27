@@ -1,65 +1,114 @@
-# Asistente Virtual RAG de Atención al Cliente (100% Local)
+<div align="center">
 
-Este repositorio contiene la implementación de un sistema de **Generación Aumentada por Recuperación (RAG)** diseñado para actuar como el asistente virtual interactivo de soporte y atención al cliente de la tienda online **TechShop**. 
+# 🤖 Asistente Virtual RAG — TechShop
 
-La característica clave de este proyecto es que está diseñado para ejecutarse **100% en local**. Toda la base de conocimiento confidencial de la empresa, el procesamiento de vectores y la inferencia del modelo de lenguaje se ejecutan de manera privada en tu propia máquina, garantizando **privacidad absoluta de los datos**, cero latencias de red externa y ausencia total de costes por APIs de terceros.
+### Sistema de atención al cliente con RAG, ejecutándose **100% en local**
 
-## 🧠 Características Principales
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Ollama](https://img.shields.io/badge/Ollama-local-black?logo=ollama&logoColor=white)](https://ollama.com/)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-vector%20store-FF6F61)](https://www.trychroma.com/)
+[![Privacy](https://img.shields.io/badge/Privacidad-100%25%20local-2ea44f)]()
+[![Cost](https://img.shields.io/badge/Coste%20APIs-0%E2%82%AC-blue)]()
 
-* **Inferencia 100% Local:** Integración nativa con **Ollama** para la ejecución local tanto del modelo de embeddings como del LLM de generación.
-* **Privacidad de Datos:** La base de conocimiento corporativa (políticas de envíos, devoluciones, garantías y pagos) jamás sale de la infraestructura local.
-* **Chunking Semántico por Párrafos:** Algoritmo personalizado de segmentación que corta los documentos respetando las estructuras de los párrafos (`\n\n`), evitando fracturar ideas o frases a la mitad.
-* **Mitigación Estricta de Alucinaciones:** El sistema incluye un *System Prompt* avanzado que obliga al LLM a responder **únicamente** con el contexto inyectado por la base de datos vectorial, forzándolo a admitir desconocimiento o a declarar que no posee la información si esta no existe en los documentos.
-* **Base Vectorial en Memoria:** Uso de **ChromaDB** en modo local/memoria para una indexación y recuperación de contexto por similitud de manera ultrarrápida.
-
-## 🛠️ Arquitectura del Pipeline RAG
-
-```text
-[Documentos Corporativos] ──► [Chunking por Párrafos] ──► [Ollama: bge-m3 (Embeddings)]
-                                                                    │
-[Respuesta Ingerida + Citas] ◄── [Ollama: gemma4] ◄── [ChromaDB (Query Vectorial)]
-```
-
-## 📦 Requisitos y Configuración de Ollama (Local)
-
-Para garantizar la ejecución local, debes tener instalado **Ollama** en tu sistema operativo.
-
-1. **Instalar Ollama:** Descárgalo e instálalo desde su sitio oficial en [ollama.com](https://ollama.com).
-2. **Descargar los Modelos del Notebook:**
-   El proyecto utiliza un modelo avanzado de lenguaje y un modelo especializado en embeddings multilingües de texto. Asegúrate de tenerlos disponibles ejecutando en tu terminal:
-
-   ```bash
-   # Descargar el modelo optimizado de Embeddings Multilingües
-   ollama pull bge-m3:latest
-
-   # Descargar el modelo de lenguaje para la generación de respuestas
-   ollama pull gemma4:latest
-   ```
-
-## 📁 Componentes del Código
-
-El notebook se estructura en secciones modulares listas para producción:
-
-1. **Imports y Verificación:** Carga y validación de las librerías `chromadb`, `ollama` y `numpy`.
-2. **Configuración de Parámetros:** Ajuste de constantes críticas del sistema como el tamaño de los fragmentos (`CHUNK_SIZE = 600` caracteres) y el número de documentos a recuperar (`N_CHUNKS_RECUPERADOS = 5`).
-3. **Base de Conocimiento (Knowledge Base):** Ingesta estructurada de las 4 políticas comerciales de TechShop (Envíos, Devoluciones, Garantías y Métodos de Pago).
-4. **Clase `AsistenteTechShop`:** Módulo principal que encapsula la base de datos vectorial, las llamadas a la API local de Ollama, la lógica de indexación semántica y el bucle de chat interactivo.
-
-## 💻 Instrucciones de Uso
-
-1. **Clonar este repositorio:**
-   ```bash
-   git clone https://github.com/TU_USUARIO/asistente-rag-local.git
-   cd asistente-rag-local
-   ```
-
-2. **Instalar dependencias de Python:**
-   ```bash
-   pip install chromadb ollama numpy
-   ```
-
-3. **Ejecutar el Chat Interactivo:**
-   Abre el entorno del notebook (`asistente_techshop_rag.ipynb`) y corre las celdas de forma secuencial. La última sección desplegará un bucle interactivo en consola (`while True`) donde podrás chatear en tiempo real con el bot formulando preguntas sobre las políticas de la tienda. Escribe `salir` para terminar la ejecución.
+</div>
 
 ---
-*Nota: Asegúrate de tener el servicio de Ollama activo en segundo plano antes de inicializar el cuaderno.*
+
+Asistente conversacional basado en **Generación Aumentada por Recuperación (RAG)** que responde dudas de clientes de la tienda online **TechShop** sobre envíos, devoluciones, garantías y métodos de pago.
+
+Todo —base de conocimiento, vectores e inferencia del LLM— corre **en tu propia máquina**. Sin datos saliendo a terceros, sin latencias de red y sin coste de APIs.
+
+## ✨ Características
+
+| | |
+|---|---|
+| 🔒 **100% local** | Embeddings y LLM corren con [Ollama](https://ollama.com/), sin salir de tu equipo |
+| 🧩 **Chunking por párrafos** | Segmenta respetando los `\n\n`, sin partir frases ni ideas a la mitad |
+| 🎯 **Anti-alucinaciones** | *System prompt* estricto: el LLM solo responde con el contexto recuperado, o admite que no lo sabe |
+| ⚡ **ChromaDB en memoria** | Indexación y recuperación por similitud, rápida y sin persistencia en disco |
+| 📑 **Respuestas con cita** | Cada respuesta indica la política oficial en la que se basa |
+
+## 🛠️ Arquitectura del pipeline
+
+```mermaid
+flowchart LR
+    A[📄 Documentos<br/>corporativos] --> B[✂️ Chunking<br/>por párrafos]
+    B --> C[🔢 bge-m3<br/>Embeddings]
+    C --> D[(🗄️ ChromaDB<br/>vector store)]
+    E[❓ Pregunta<br/>del cliente] --> C
+    D -->|top-k chunks| F[🧠 gemma4<br/>LLM]
+    F --> G[💬 Respuesta<br/>+ citas]
+
+    style D fill:#FF6F61,color:#fff
+    style C fill:#3776AB,color:#fff
+    style F fill:#222,color:#fff
+```
+
+## 🧠 Modelos (vía Ollama)
+
+| Rol | Modelo | Para qué |
+|-----|--------|----------|
+| Embeddings | `bge-m3:latest` | Vectoriza chunks y preguntas (multilingüe, bueno en español) |
+| Generación | `gemma4:latest` | Redacta la respuesta final a partir del contexto |
+
+## 📦 Instalación
+
+**1. Instala Ollama** desde [ollama.com](https://ollama.com) y arranca el servicio en segundo plano.
+
+**2. Descarga los modelos:**
+
+```bash
+ollama pull bge-m3:latest    # embeddings multilingües
+ollama pull gemma4:latest    # LLM de generación
+```
+
+**3. Clona el repo e instala dependencias:**
+
+```bash
+git clone https://github.com/TU_USUARIO/asistente-rag-local.git
+cd asistente-rag-local
+pip install chromadb ollama numpy
+```
+
+> [!NOTE]
+> Asegúrate de tener el servicio de Ollama **activo** antes de ejecutar el notebook.
+
+## ▶️ Uso
+
+Abre `asistente_techshop_rag.ipynb` y ejecuta las celdas en orden. La última lanza un chat interactivo en consola:
+
+```
+💬 Chat con el asistente virtual de TechShop
+Tú: ¿Cuánto cuesta el envío express?
+🤖 Asistente: El envío express cuesta 4,99€ y tarda 1-2 días hábiles. (Fuente: Política de Envíos)
+```
+
+Escribe `salir` para terminar.
+
+## ⚙️ Configuración
+
+Constantes ajustables en la celda de configuración:
+
+| Parámetro | Valor | Descripción |
+|-----------|-------|-------------|
+| `CHUNK_SIZE` | `600` | Tamaño objetivo de cada chunk (caracteres) |
+| `N_CHUNKS_RECUPERADOS` | `5` | Nº de chunks que se pasan al LLM como contexto |
+| `MODELO_EMBEDDING` | `bge-m3:latest` | Modelo de embeddings |
+| `MODELO_LLM` | `gemma4:latest` | Modelo de lenguaje |
+
+## 📁 Estructura del notebook
+
+1. **Imports y verificación** — `chromadb`, `ollama`, `numpy`
+2. **Configuración** — constantes del sistema
+3. **Base de conocimiento** — 4 políticas de TechShop (envíos, devoluciones, garantías, pagos)
+4. **Chunking semántico** — `dividir_en_chunks_por_parrafos()`
+5. **Clase `AsistenteTechShop`** — embedder, vector store, indexación, recuperación y generación
+6. **Inicialización e indexado**
+7. **Batería de pruebas** — incluye un control fuera de dominio para verificar que no alucina
+8. **Chat interactivo**
+
+---
+
+<div align="center">
+<sub>Proyecto de demostración de una arquitectura RAG local y privada.</sub>
+</div>
